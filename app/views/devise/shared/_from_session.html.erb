@@ -1,0 +1,10 @@
+<% if session['user_attributes'].present? %>
+  <div>
+    <%= session['user_attributes']['info']['first_name'] %>
+    <%= session['user_attributes']['info']['last_name'] %>
+    <%= session['user_attributes']['extra']['raw_info']['city']['title'] if session['user_attributes']['provider'] == 'vkontakte' && session['user_attributes']['extra']['raw_info']['city'].present? %>
+    <%= image_tag(session['user_attributes']['extra']['raw_info']['photo_100'], class: 'register-image') if session['user_attributes']['provider'] == 'vkontakte' %>
+    <%= image_tag(session['user_attributes']['info']['image'], class: 'register-image') if session['user_attributes']['provider'] == 'facebook' %>
+    <%= image_tag(session['user_attributes']['info']['image'], class: 'register-image') if session['user_attributes']['provider'] == 'google_oauth2' %>
+  </div>
+<% end %>

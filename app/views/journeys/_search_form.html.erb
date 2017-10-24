@@ -1,0 +1,22 @@
+<%= form_for @journey, url: search_path, method: :post do |form| %>
+  <div class="form-group">
+    <div class="col-md-3">
+      <%= form.text_field :place_of_departure, placeholder: 'Місце відправлення', class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-3">
+      <%= form.text_field :place_of_arrive, placeholder: 'Місце прибуття', class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-3">
+      <%= form.date_field :date_of_departure, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group margin-btn">
+    <div class="col-md-3">
+      <%= form.submit 'Пошук', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>

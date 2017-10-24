@@ -1,0 +1,50 @@
+<%if notice %>
+  <div class="alert alert-success">
+    <p id="notice"><%= notice %></p>
+  </div>
+<%end%>
+
+<p><b>Ім'я:</b> <%= @user.first_name%></p>
+<p><b>Прізвище:</b> <%= @user.last_name%></p>
+<p><b>Місто:</b> <%= @user.city%></p>
+<% if current_user && current_user.role.name == "admin" %>
+  <p><b>Роль:</b> <%= @user.role.name%></p>
+<%end%>
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', root_path %>
+
+<% unless @journeys.blank? %>
+<h1>Мої квитки</h1>
+<table class="table table-bordered">
+  <thead>
+  <tr class="info">
+    <th>#</th>
+    <th>Місце відправлення</th>
+    <th>Час відправлення</th>
+    <th>Місце прибуття</th>
+    <th>Час прибуття</th>
+    <th>Кількість</th>
+    <th>Місця</th>
+    <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @journeys.each do |journey| %>
+    <tr>
+      <td><%= link_to journey.id,journey %></td>
+      <td><%= journey.place_of_departure %></td>
+      <td><%= journey.date_of_departure %></td>
+      <td><%= journey.place_of_arrive %></td>
+      <td><%= journey.date_of_arrive %></td>
+      <td><%= @user.count_tickets(journey) %></td>
+      <td><%= @user.places(journey) %></td>
+      <td><%= link_to 'Повернути квитки', journey_return_tickets_path(journey, current_user), method: :delete, data: { confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+      </td>
+     </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+

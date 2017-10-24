@@ -1,0 +1,20 @@
+# DO NOT EDIT
+# We have separate place in hell for those who trying to edit this file
+
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  database: pivorak
+  host: localhost
+  pool: 5
+  username: root
+  password: 12345678
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

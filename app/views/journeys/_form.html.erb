@@ -1,0 +1,60 @@
+<div class='row'>
+  <div class='col-md-6 col-md-offset-3'>
+    <%= form_for journey, html: { multipart: true } do |f| %>
+        <% if journey.errors.any? %>
+            <div class="alert alert-danger">
+            <ul>
+              <% journey.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+            </div>
+        <% end %>
+        <div class='panel panel-primary'>
+            <div class='panel-heading'>Заповніть поля</div>
+            <div class='panel-body'>
+              <div class='control-group'>
+                <%= f.label "Кількість місць" %>
+                <div class='controls'>
+                  <%= f.number_field :count_of_seats, in: 10..100, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class='control-group'>
+                <%= f.label "Місце відправленя" %>
+                <div class='controls'>
+                  <%= f.text_field :place_of_departure, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class='control-group'>
+                <%= f.label "Дата відправлення" %>
+                <div class='controls'>
+                  <%= f.datetime_local_field :date_of_departure, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class='control-group'>
+                <%= f.label "Місце прибуття" %>
+                <div class='controls'>
+                  <%= f.text_field :place_of_arrive, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class='control-group'>
+                <%= f.label "Дата прибуття" %>
+                <div class='controls'>
+                  <%= f.datetime_local_field :date_of_arrive, class: 'form-control' %>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class='panel panel-primary'>
+          <div class='panel-body'>
+            <%= f.submit 'Зберегти', class: "btn btn-lg btn-teal" %>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>

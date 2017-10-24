@@ -1,0 +1,9 @@
+﻿<meta name="viewport" content="width=device-width, initial-scale=1">
+<% provide(:title, (t 'registrations.new.sign_up')) %>
+<% provide(:pageid, 'sign_up') %>
+
+<% if session["user_attributes"] %>
+	<%= render 'omniauth_login' %>
+<% else %>
+   <%= render 'main_form_mindpower' %>
+  <% end %>

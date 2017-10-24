@@ -1,0 +1,11 @@
+<%- if devise_mapping.omniauthable? %>
+	<% resource_class.omniauth_providers.each do |provider| %>
+				<% if provider.to_s.titleize == "Google Oauth2"%>
+					<%= link_to (t 'shared._social.login_using') + " Google", omniauth_authorize_path(resource_name, provider)%><br />
+				<% else %>
+					<%= link_to (t 'shared._social.login_using') + " #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider)%><br />
+    		<% end %>
+    <% end -%>
+<% end %>
+
+

@@ -1,0 +1,61 @@
+<%if notice %>
+  <div class="alert alert-success">
+    <p id="notice"><%= notice %></p>
+  </div>
+<%end%>
+
+<h1>Рейс: <%= @journey.place_of_departure %> - <%= @journey.place_of_arrive %></h1>
+
+<p><b>Місце відправлення:</b> <%= @journey.place_of_departure %></p>
+<p><b>Час відправлення:</b>   <%= @journey.date_of_departure %></p>
+<p><b>Місце прибуття:</b>     <%= @journey.place_of_arrive %></p>
+<p><b>Час прибуття:</b> 	    <%= @journey.date_of_arrive %></p>
+<p><b>Кількість місць:</b>    <%= @journey.count_of_seats %></p>
+<p><b>Кількість вільних місць: <span class='free_places'> <%= @journey.free_places %></div> </b></p>
+<div class='container'>
+<% unless @free_places == 0 %>
+<%= link_to 'Купити квитки', journey_choosing_places_path(@journey), class: 'btn btn-primary' %>
+<% end %>
+
+<% if current_user && current_user.role.name == "admin" %>
+<%= link_to 'Редагувати', edit_journey_path(@journey),class: 'btn btn-warning' %> 
+<td><%= link_to 'Видалити', @journey , method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+<% end %>
+<%= link_to 'Назад', journeys_path, class: 'btn btn-success'%>
+
+<br/>
+<br/>
+
+<% if current_user && current_user.role.name == 'admin' %>
+<% unless @users.blank? %>
+<table class="table table-bordered">
+  <thead>
+  <tr class="info">
+    <th>#</th>
+    <th>Ім'я і прізвище</th>
+    <th>Місто</th>
+    <th>Кількість квитків</th>
+    <th>Місця</th>
+    <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each_with_index do |user,i| %>
+    <tr>
+      <td><%= i+1 %></td>
+      <td><%= user.full_name %></td>
+      <td><%= user.city %></td>
+      <td><%= user.count_tickets(@journey) %></td>
+      <td><%= user.places(@journey) %></td>
+      <% if current_user && current_user.role.name == "admin" %>
+      <td><%= link_to 'Вилучити квитки', journey_return_tickets_path(@journey, user), method: :delete, data: { confirm: 'Are you sure?'}, class: 'btn btn-danger' %>
+      <%end%>  
+      </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<% end %>
+<% end %>

@@ -1,0 +1,18 @@
+<%if notice %>
+  <div class="alert alert-success">
+    <p id="notice"><%= notice %></p>
+  </div>
+<%end%>
+
+<h1>Рейс: <%= @journey.place_of_departure %> - <%= @journey.place_of_arrive %></h1>
+
+<%= form_tag journey_bought_tickets_path, multipart: true do |f|%>
+	<% @journey.count_of_seats.times do |i| %>
+		<%= check_box_tag 'place_ids[]', i + 1 , false, disabled: @journey.free_place(@journey, i + 1) %>
+		<span class="<%= 'free_places' if @journey.free_place(@journey, i + 1) %>">   <%= label_tag i + 1 %></span>
+	<% end %>
+	<br/>
+	<%= submit_tag 'Купити', class: 'btn btn-success'%>
+<% end %>
+<br/>
+<%= link_to 'Назад', journey_path(@journey)%>

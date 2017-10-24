@@ -1,0 +1,148 @@
+  <div class="container">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <%= render 'devise/shared/from_session' %>
+
+      <h2 class="text-left"><%= t 'registrations._omniauth_login.welcome' %></h2>
+      <%= devise_error_messages! %>
+      <% if cookies[:new_user_id] %>
+        <p><%= @status_of_reg %></p>
+      <% else %>
+      <p><%= t 'registrations._omniauth_login.fill' %></p>
+      <%= form_for(resource, :html => {:class => "form-horizontal"}, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+      <%= f.hidden_field :provider, value: session['user_attributes']['provider'] %>
+      <% if session['user_attributes']['provider'] == 'facebook' %>
+      <%= f.hidden_field :fb, value: session['user_attributes']['uid'] %>
+      <%= f.hidden_field :avatar, value: session['user_attributes']['info']['image'] %>
+      <% elsif session['user_attributes']['provider'] == 'vkontakte' %>
+      <%= f.hidden_field :vk, value: session['user_attributes']['uid'] %>
+      <%= f.hidden_field :avatar, value: session['user_attributes']['extra']['raw_info']['photo_100'] %>
+      <% end %>
+
+  <% if Figaro.env.site_name == 'brainwave' %>
+
+  <div class="form-group well text-white" style="background-color: #337AB7">
+              <b><%= t 'registrations._omniauth_login.q_name' %></b><br/>
+              <%= t 'registrations._omniauth_login.for_admins_html' %>
+  </div>
+  <div class="form-group">
+    <label for="user_name"><%= t 'registrations._omniauth_login.first_name' %></label>
+    <%= f.text_field :name, class: "form-control", value: session['user_attributes']['info']['first_name'] %>
+  </div>
+  <div class="form-group">
+    <label for="user_surname"><%= t 'registrations._omniauth_login.last_name' %></label>
+    <%= f.text_field :surname, class: "form-control", value: session['user_attributes']['info']['last_name'] %>
+  </div>
+  <div class="form-group well text-white" style="background-color: #337AB7">
+              <b><%= t 'registrations._omniauth_login.q_contact' %></b><br/>
+              <%= t 'registrations._omniauth_login.real_email' %>
+  </div>
+  <div class="form-group">
+    <label for="user_email">Email</label>
+                <% if cookies[:invite_code] %>
+                  <% if Invite.find_by_code(cookies[:invite_code]).nil? %>
+                    <%= f.email_field :email, class: "form-control", :value => session['user_attributes']['info']['email'] %>
+                  <% else %>
+                    <%= f.email_field :email, class: "form-control", :value => Invite.find_by_code(cookies[:invite_code]).email %>
+                  <% end %>
+                <% else %>
+                  <%= f.email_field :email, class: "form-control", :value => session['user_attributes']['info']['email'] %>
+                <% end %>
+  </div>
+  <div class="form-group well text-white" style="background-color: #337AB7">
+              <b><%= t 'registrations._omniauth_login.location' %></b><br/>
+              <%= t 'registrations._omniauth_login.help_text' %>
+  </div>
+  <div class="form-group">
+    <label for="user_country"><%= t 'registrations._omniauth_login.country' %></label>
+    <%= f.select(:country, User::COUNTRIES, {:include_blank => true}) %>
+  </div>
+  <div class="form-group">
+    <label for="user_city"><%= t 'registrations._omniauth_login.city' %></label>
+    <%= f.text_field :city, class: "form-control", value: (session['user_attributes']['extra']['raw_info']['city']['title'] if session['user_attributes']['extra']['raw_info']['city'].present?) %>
+  </div>
+  <div class="form-group">
+    <label for="user_note_for_request"><%= t 'registrations._omniauth_login.comment' %> (необязательное поле)</label>
+    <%= f.text_area :note_for_request, class: "form-control" %>
+  </div>
+
+  <% else %>
+      <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+          <table class="table text-left">
+            <tr>
+              <td class="col-md-4"><%= t 'registrations._omniauth_login.email' %></td>
+              <td><%= f.email_field :email, class: "form-control", :value => session['user_attributes']['info']['email'] %></td>
+            </tr>
+            <tr>
+              <td class="col-md-4"><%= t 'registrations._omniauth_login.password' %></td>
+              <td><%= f.password_field :password, class: "form-control" %></td>
+            </tr>
+            <tr>
+              <td class="col-md-4"><%= t 'registrations._omniauth_login.confirm_pass' %></td>
+              <td><%= f.password_field :password_confirmation, class: "form-control" %></td>
+            </tr>
+            <tr>
+              <td><%= t 'registrations._omniauth_login.last_name' %></td>
+              <td><%= f.text_field :surname, class: "form-control", value: session['user_attributes']['info']['last_name'] %></td>
+            </tr>
+            <tr>
+              <td><%= t 'registrations._omniauth_login.first_name' %></td>
+              <td><%= f.text_field :name, class: "form-control", value: session['user_attributes']['info']['first_name'] %></td>
+            </tr>
+            <tr>
+              <td><%= t 'registrations._omniauth_login.patronymic' %></td>
+              <td><%= f.text_field :patronym, class: "form-control" %></td>
+            </tr>
+            <tr>
+              <td class="col-md-4"><%= t 'registrations._omniauth_login.city' %></td>
+              <td><%= f.text_field :city, class: "form-control", value: (session['user_attributes']['extra']['raw_info']['city']['title'] if session['user_attributes']['extra']['raw_info']['city'].present?) %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+  <% end %>
+
+      <div class="control-group">
+        <div class="error"></div>
+        <%= f.submit (t 'registrations._omniauth_login.sign_up'), class: "btn btn-teal btn-lg" %>
+      </div>
+      <div class="control-group">
+        <%= link_to (t 'registrations._omniauth_login.cancel_reg'), cancel_user_registration_path, data: { confirm: (t 'registrations._omniauth_login.sure') },
+       class: "btn btn-danger btn-mini" %>
+      </div>
+      <% end %>
+      <% end %>
+    </div>
+
+<% if Figaro.env.site_name == 'brainwave' %>
+
+<script type="text/javascript">
+$("#new_user").submit(function() {
+  var name = $.trim($('#user_name').val());
+  var surname = $.trim($('#user_surname').val());
+  var email = $.trim($('#user_email').val());
+  var city = $.trim($('#user_city').val());
+  var country = $.trim($('#user_country').val());
+  if (name === '' || surname === '' || email === '' || city === '' || country === '') {
+    alert('Не заполнены необходимые поля формы. Пожалуйста, заполните форму до конца.');
+    return false;
+  };
+});
+</script>
+<% else %>
+<script type="text/javascript">
+$("#new_user").submit(function() {
+  var name = $.trim($('#user_name').val());
+  var surname = $.trim($('#user_surname').val());
+  var email = $.trim($('#user_email').val());
+  var city = $.trim($('#user_city').val());
+  var country = $.trim($('#user_country').val());
+  if (name === '' || surname === '' || email === '' || city === '') {
+    alert('Не заполнены необходимые поля формы. Пожалуйста, заполните форму до конца.');
+    return false;
+  };
+});
+</script>
+<% end %>

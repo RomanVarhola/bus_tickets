@@ -1,0 +1,52 @@
+<%if notice %>
+  <div class="alert alert-success">
+    <p id="notice"><%= notice %></p>
+  </div>
+<%end%>
+
+<% if current_user && current_user.role.name == "admin" %>
+  <%= link_to 'Новий рейс', new_journey_path, class: 'btn btn-success'%>
+<% end %>
+<div class="row">
+  <%= render partial: 'search_form'%>
+</div>
+<div class="container">
+<h1>Розклад рейсів</h1>
+<%= will_paginate @journeys %>
+<% unless @journeys.blank? %>
+<table class="table table-bordered">
+  <thead>
+  <tr class="info">
+    <th>#</th>
+    <th>Місце відправлення</th>
+    <th>Час відправлення</th>
+    <th>Місце прибуття</th>
+    <th>Час прибуття</th>
+    <th>Кількість місць</th>
+    <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @journeys.each do |journey| %>
+    <tr>
+      <td><%= link_to journey.id,journey %></td>
+      <td><%= journey.place_of_departure %></td>
+      <td><%= journey.date_of_departure %></td>
+      <td><%= journey.place_of_arrive %></td>
+      <td><%= journey.date_of_arrive %></td>
+      <td><%= journey.count_of_seats %> | <span style="color:red"><%= journey.free_places %></span></td>
+      <td><%= link_to 'Показати', journey %></td>
+      <% if current_user && current_user.role.name == "admin" %>
+      <td><%= link_to 'Редагувати', edit_journey_path(journey) %></td>
+      <td><%= link_to 'Видалити', journey, method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%end%>  
+      </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<br/>
+<%= will_paginate @journeys %>
+</div>
